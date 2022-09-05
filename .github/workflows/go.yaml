@@ -10,7 +10,7 @@ env:
     IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
     REGISTRY_USER: ${{ github.actor }}
     REGISTRY_PASSWORD: ${{ github.token }}
-    KUBE_GIT_VERSION: v1.24.2
+    KUBE_GIT_VERSION: v1.25.1
     
 jobs:
 

@@ -27,8 +27,8 @@ jobs:
         '
         for IMAGE in $LIST
         do
-          docker pull index.docker.io /$IMAGE
-          docker tag index.docker.io /$IMAGE $IMAGE_REGISTRY/$IMAGE
+          docker pull index.docker.io/$IMAGE
+          docker tag index.docker.io/$IMAGE $IMAGE_REGISTRY/$IMAGE
           docker push $IMAGE_REGISTRY/$IMAGE
         done
         docker images

@@ -19,39 +19,32 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    # - name: Upload complementary images to GHCR
-    #   run: |
-    #     echo $REGISTRY_PASSWORD | docker login $IMAGE_REGISTRY -u $REGISTRY_USER --password-stdin 
-    #     export LIST='
-    #       pause:3.7
-    #       dns/k8s-dns-node-cache:1.21.1
-    #       coredns/coredns:v1.8.6
-    #       cpa/cluster-proportional-autoscaler-amd64:1.8.5
-    #       metrics-server/metrics-server:v0.6.1
-    #       kube-apiserver:v1.24.3
-    #       kube-controller-manager:v1.24.3
-    #       kube-scheduler:v1.24.3
-    #       kube-proxy:v1.24.3
-    #     '
-    #     for IMAGE in $LIST
-    #     do
-    #       docker pull registry.k8s.io/$IMAGE
-    #       docker tag registry.k8s.io/$IMAGE $IMAGE_REGISTRY/$IMAGE
-    #       docker push $IMAGE_REGISTRY/$IMAGE
-    #     done
-    #     docker images
+    - name: Upload complementary images to GHCR
+      run: |
+        echo $REGISTRY_PASSWORD | docker login $IMAGE_REGISTRY -u $REGISTRY_USER --password-stdin 
+        export LIST='
+          python:3.11.1-alpine
+        '
+        for IMAGE in $LIST
+        do
+          docker pull index.docker.io /$IMAGE
+          docker tag index.docker.io /$IMAGE $IMAGE_REGISTRY/$IMAGE
+          docker push $IMAGE_REGISTRY/$IMAGE
+        done
+        docker images
 
-    - name: Create Github Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ env.KUBE_GIT_VERSION }}
-        release_name: Release ${{ env.KUBE_GIT_VERSION }}
-        draft: false
-        prerelease: false
 
-    - name: Get GitHub Release URL
-      run: echo ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+    # - name: Create Github Release
+    #   id: create_release
+    #   uses: actions/create-release@v1
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     tag_name: ${{ env.KUBE_GIT_VERSION }}
+    #     release_name: Release ${{ env.KUBE_GIT_VERSION }}
+    #     draft: false
+    #     prerelease: false
+
+    # - name: Get GitHub Release URL
+    #   run: echo ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
 
